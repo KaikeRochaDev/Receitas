@@ -19,7 +19,7 @@ def category(request, category_id):
         'title': f'{recipes[0].category.name} - Categoria | '})
 
 def recipe(request, id):
-    recipe = get_object_or_404(Recipe, pk=id, is_published=True,)
+    recipe = get_object_or_404(Recipe, id=id, is_published=True,)
 
     return render(request, 'recipes/pages/recipe-view.html', context={
         'recipe': recipe,
