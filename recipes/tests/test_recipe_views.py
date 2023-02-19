@@ -22,3 +22,9 @@ class RecipeViewsTest(TestCase):
     def test_recipe_home_view_loads_correct_template(self):
         response = self.client.get(reverse('recipes:home'))
         self.assertTemplateUsed(response, 'recipes/pages/home.html')
+        
+    def test_recipe_home_template_shows_no_recipes_found_if_no_recipes(self):
+        response = self.client.get(reverse('recipes:home'))
+        self.assertIn(
+            'Nenhuma receita foi encontrada aqui 😞', 
+            response.content.decode('utf-8'))
