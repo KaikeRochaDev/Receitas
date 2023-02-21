@@ -24,7 +24,7 @@ class RegisterForm(forms.ModelForm):
     confirm_password = forms.CharField(
         required=True,
         widget=forms.PasswordInput(attrs={
-            'placeholder': 'Repita sua senha'
+            'placeholder': 'Repita sua senha...'
             }),
         label='Confirmar senha',
     )
@@ -32,7 +32,7 @@ class RegisterForm(forms.ModelForm):
     password = forms.CharField(
         required=True,
         widget=forms.PasswordInput(attrs={
-            'placeholder': 'Digite sua senha'
+            'placeholder': 'Digite sua senha...'
             }),
         label='Senha',
         validators=[strong_password]
