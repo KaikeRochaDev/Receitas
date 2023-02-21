@@ -1,8 +1,11 @@
-from authors.forms import RegisterForm
-from parameterized import parameterized
-from django.test import TestCase as DjangoTestCase
 from unittest import TestCase
+
+from django.test import TestCase as DjangoTestCase
 from django.urls import reverse
+from parameterized import parameterized
+
+from authors.forms import RegisterForm
+
 
 class AuthorRegisterFormUnitTest(TestCase):
     @parameterized.expand([
@@ -19,6 +22,10 @@ class AuthorRegisterFormUnitTest(TestCase):
         self.assertEqual(current_placeholder, placeholder)
         
     @parameterized.expand([
+        ('username', (
+            'O nome de usuário deve conter letras e números. '
+            'o Usuário deve conter entre 4 e 150 caracteres.'
+        )),
         ('email', 'Digite um e-mail válido')
     ])
     def test_fields_help_text(self, field, needed):
@@ -66,3 +73,21 @@ class AuthorRegisterFormIntegrationTest(DjangoTestCase):
         response = self.client.post(url, data=self.form_data, follow=True)
         self.assertIn(msg, response.content.decode('utf-8'))
         self.assertIn(msg, response.context['form'].errors.get(field))
+        
+    def test_username_field_min_length_should_be_4(self):
+        self.form_data['username'] = 'joa'
+        url = reverse('authors:create')
+        response = self.client.post(url, data=self.form_data, follow=True)
+        
+        msg = 'O usuário deve conter pelo menos 4 caracteres'
+        self.assertIn(msg, response.content.decode('utf-8'))
+        self.assertIn(msg, response.context['form'].errors.get('username'))
+        
+    def test_username_field_max_length_should_be_150(self):
+        self.form_data['username'] = 'A'*151
+        url = reverse('authors:create')
+        response = self.client.post(url, data=self.form_data, follow=True)
+        
+        msg = 'O usuário não pode conter mais do que 150 caracteres'
+        self.assertIn(msg, response.content.decode('utf-8'))
+        self.assertIn(msg, response.context['form'].errors.get('username'))

@@ -37,6 +37,19 @@ class RegisterForm(forms.ModelForm):
         label='Sobrenome'
     )
     
+    username = forms.CharField(
+        error_messages={'required': 'Este campo é obrigatório', 'min_length': 'O usuário deve conter pelo menos 4 caracteres', 'max_length': 'O usuário não pode conter mais do que 150 caracteres'},
+        help_text=(
+            'O nome de usuário deve conter letras e números. '
+            'o Usuário deve conter entre 4 e 150 caracteres.'
+        ),
+        widget=forms.EmailInput(attrs={
+            'placeholder': 'Digite seu nome de usuário...'
+        }),
+        label='Nome de usuário',
+        min_length=4, max_length=150
+    )
+    
     email = forms.CharField(
         error_messages={'required': 'Por favor, Preencha seu e-mail'},
         help_text='Digite um e-mail válido',
@@ -66,41 +79,6 @@ class RegisterForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'username', 'email', 'password']
-        
-        labels = {
-            'username': 'Nome de usuário',
-            'first_name': 'Nome',
-            'last_name': 'Sobrenome',
-            'email': 'E-mail',
-            'password': 'Senha',
-        }
-        
-        error_messages = {
-            'username': {
-                'required': 'Este campo é obrigatório',
-            }
-        }
-        
-        widgets = {
-            'first_name': forms.TextInput(attrs={
-                'placeholder': 'Digite seu nome...'
-            }),
-            'last_name': forms.TextInput(attrs={
-                'placeholder': 'Digite seu sobrenome...'
-            }),
-            
-            'username': forms.TextInput(attrs={
-                'placeholder': 'Digite seu nome de usuário...'
-            }),
-            
-            'email': forms.EmailInput(attrs={
-                'placeholder': 'Digite seu e-mail...'
-            }),
-            
-            'password': forms.PasswordInput(attrs={
-                'placeholder': 'Digite sua senha...'
-            })
-        }
         
     def clean(self):
         cleaned_data = super().clean()
