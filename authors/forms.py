@@ -1,6 +1,7 @@
 from django import forms 
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+import re
 
 def add_attr(field, attr_name, attr_new_val):
     existing_attr = field.widget.attrs.get(attr_name, '')
@@ -8,6 +9,16 @@ def add_attr(field, attr_name, attr_new_val):
     
 def add_placeholder(field, placeholder_val):
     add_attr(field, 'placeholder', placeholder_val)
+    
+def strong_password(password):
+    regex = re.compile(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$')
+    
+    if not regex.match(password):
+        raise ValidationError((
+            'A senha deve ter pelo menos uma letra maiúscula, uma letra minúscula e um número. ' 
+            'A senha deve ser de pelo menos 8 caracteres'
+        ),
+            code='invalid')
 
 class RegisterForm(forms.ModelForm):
     confirm_password = forms.CharField(
@@ -16,6 +27,15 @@ class RegisterForm(forms.ModelForm):
             'placeholder': 'Repita sua senha'
             }),
         label='Confirmar senha',
+    )
+    
+    password = forms.CharField(
+        required=True,
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Digite sua senha'
+            }),
+        label='Senha',
+        validators=[strong_password]
     )
     class Meta:
         model = User
