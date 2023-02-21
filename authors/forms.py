@@ -21,21 +21,47 @@ def strong_password(password):
             code='invalid')
 
 class RegisterForm(forms.ModelForm):
-    confirm_password = forms.CharField(
-        required=True,
-        widget=forms.PasswordInput(attrs={
-            'placeholder': 'Repita sua senha...'
-            }),
-        label='Confirmar senha',
+    first_name = forms.CharField(
+        error_messages={'required': 'Por favor, Preencha seu nome'},
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Digite seu nome...'
+        }),
+        label='Nome'
+    )
+    
+    last_name = forms.CharField(
+        error_messages={'required': 'Por favor, Preencha sua sobrenome'},
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Digite seu sobrenome...'
+        }),
+        label='Sobrenome'
+    )
+    
+    email = forms.CharField(
+        error_messages={'required': 'Por favor, Preencha seu e-mail'},
+        help_text='Digite um e-mail válido',
+        widget=forms.EmailInput(attrs={
+            'placeholder': 'Digite seu e-mail...'
+        }),
+        label='E-mail'
     )
     
     password = forms.CharField(
-        required=True,
+        error_messages={'required': 'Por favor, Preencha sua senha'},
         widget=forms.PasswordInput(attrs={
             'placeholder': 'Digite sua senha...'
             }),
         label='Senha',
         validators=[strong_password]
+    )
+    
+    
+    confirm_password = forms.CharField(
+        error_messages={'required': 'Por favor, repita sua senha'},
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Repita sua senha...'
+            }),
+        label='Confirmar senha',
     )
     class Meta:
         model = User
@@ -47,9 +73,6 @@ class RegisterForm(forms.ModelForm):
             'last_name': 'Sobrenome',
             'email': 'E-mail',
             'password': 'Senha',
-        }
-        help_texts = {
-            'email': 'Digite um e-mail válido'
         }
         
         error_messages = {
