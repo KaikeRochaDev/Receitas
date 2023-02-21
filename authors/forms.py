@@ -1,7 +1,21 @@
 from django import forms 
 from django.contrib.auth.models import User
 
+def add_attr(field, attr_name, attr_new_val):
+    existing_attr = field.widget.attrs.get(attr_name, '')
+    field.widget.attrs[attr_name] = f'{existing_attr} {attr_new_val}'.strip()
+    
+def add_placeholder(field, placeholder_val):
+    field.widget.attrs['placeholder'] = placeholder_val
+
 class RegisterForm(forms.ModelForm):
+    confirm_password = forms.CharField(
+        required=True,
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Repita sua senha'
+            }),
+        label='Confirmar senha',
+    )
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'username', 'email', 'password']
@@ -24,14 +38,23 @@ class RegisterForm(forms.ModelForm):
         }
         
         widgets = {
-            'first_name': forms.TextInput(),
+            'first_name': forms.TextInput(attrs={
+                'placeholder': 'Digite seu nome...'
+            }),
+            'last_name': forms.TextInput(attrs={
+                'placeholder': 'Digite seu sobrenome...'
+            }),
             
-            'last_name': forms.TextInput(),
+            'username': forms.TextInput(attrs={
+                'placeholder': 'Digite seu nome de usuário...'
+            }),
             
-            'username': forms.TextInput(),
+            'email': forms.EmailInput(attrs={
+                'placeholder': 'Digite seu e-mail...'
+            }),
             
-            'email': forms.EmailInput(),
-            
-            'password': forms.PasswordInput()
+            'password': forms.PasswordInput(attrs={
+                'placeholder': 'Digite sua senha...'
+            })
         }
         
