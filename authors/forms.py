@@ -1,5 +1,6 @@
 from django import forms 
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
 def add_attr(field, attr_name, attr_new_val):
     existing_attr = field.widget.attrs.get(attr_name, '')
@@ -58,3 +59,26 @@ class RegisterForm(forms.ModelForm):
             })
         }
         
+    def clean_password(self):
+        data = self.cleaned_data.get('password')
+        
+        if 'atenção' in data:
+            raise ValidationError(
+                'Não digite "atenção" no campo de password',
+                code='invalid',
+                params={ 'value': 'atenção' }
+            )
+        
+        return data
+    
+    def clean_first_name(self):
+        data = self.cleaned_data.get('first_name')
+        
+        if 'John Doe' in data:
+            raise ValidationError(
+                'Não digite %(value)s no campo nome',
+                code='invalid',
+                params={ 'value': '"John Doe"' }
+            )
+        
+        return data
