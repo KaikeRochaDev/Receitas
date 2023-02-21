@@ -91,3 +91,39 @@ class AuthorRegisterFormIntegrationTest(DjangoTestCase):
         msg = 'O usuário não pode conter mais do que 150 caracteres'
         self.assertIn(msg, response.content.decode('utf-8'))
         self.assertIn(msg, response.context['form'].errors.get('username'))
+        
+    def test_password_field_have_lower_upper_case_letters_and_numbers(self):
+        self.form_data['password'] = 'abc123'
+        url = reverse('authors:create')
+        response = self.client.post(url, data=self.form_data, follow=True)
+        
+        msg = (
+            'A senha deve ter pelo menos uma letra maiúscula, uma letra minúscula e um número. ' 
+            'A senha deve ser de pelo menos 8 caracteres'
+        )
+        self.assertIn(msg, response.content.decode('utf-8'))
+        self.assertIn(msg, response.context['form'].errors.get('password'))
+        
+        self.form_data['password'] = 'Teste123456'
+        url = reverse('authors:create')
+        response = self.client.post(url, data=self.form_data, follow=True)
+        
+        self.assertNotIn(msg, response.context['form'].errors.get('password'))
+        
+    def test_password_and_confirm_password_are_equal(self):
+        self.form_data['password'] = 'Teste123456'
+        self.form_data['confirm_password'] = 'Teste1234567'
+        url = reverse('authors:create')
+        response = self.client.post(url, data=self.form_data, follow=True)
+        
+        msg = 'Senha e Confirmar senha devem ser iguais'
+        
+        self.assertIn(msg, response.content.decode('utf-8'))
+        self.assertIn(msg, response.context['form'].errors.get('password'))
+        
+        self.form_data['password'] = 'Teste123456'
+        self.form_data['confirm_password'] = 'Teste123456'
+        url = reverse('authors:create')
+        response = self.client.post(url, data=self.form_data, follow=True)
+        
+        self.assertNotIn(msg, response.content.decode('utf-8'))
