@@ -82,3 +82,15 @@ class RegisterForm(forms.ModelForm):
             )
         
         return data
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get('password')
+        confirm_password = cleaned_data.get('confirm_password')
+        
+        if password != confirm_password:
+            raise ValidationError({
+                'password': 'Senha e Confirmar senha devem ser iguais',
+                
+                'confirm_password': 'Senha e Confirmar senha devem ser iguais'
+            })
