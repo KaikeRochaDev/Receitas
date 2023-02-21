@@ -23,3 +23,17 @@ class AuthorRegisterFormUnitTest(TestCase):
         form = RegisterForm()
         current = form[field].field.help_text
         self.assertEqual(current, needed)
+        
+
+    @parameterized.expand([
+        ('first_name', 'Nome'),
+        ('last_name', 'Sobrenome'),
+        ('username', 'Nome de usuário'),
+        ('email', 'E-mail'),
+        ('password', 'Senha'),
+        ('confirm_password', 'Confirmar senha'),
+    ])
+    def test_fields_label(self, field, needed):
+        form = RegisterForm()
+        current = form[field].field.label
+        self.assertEqual(current, needed)
