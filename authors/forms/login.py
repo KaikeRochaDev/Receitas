@@ -7,6 +7,7 @@ class LoginForm(forms.Form):
         }),
         label='Nome de usuário'
         )
+    
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={
             'placeholder': 'Digite sua senha...'
