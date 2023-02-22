@@ -3,9 +3,10 @@ from selenium.webdriver.common.by import By
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 import time
 import pytest
+from recipes.tests.test_recipe_base import RecipeMixin
 
 @pytest.mark.functional_test
-class RecipeHomePageFunctionalTest(StaticLiveServerTestCase):
+class RecipeHomePageFunctionalTest(StaticLiveServerTestCase, RecipeMixin):
     def sleep(self, seconds=5):
         time.sleep(seconds)
 
