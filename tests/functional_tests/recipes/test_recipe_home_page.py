@@ -2,7 +2,9 @@ from utils.browser import make_chrome_browser
 from selenium.webdriver.common.by import By
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 import time
+import pytest
 
+@pytest.mark.functional_test
 class RecipeHomePageFunctionalTest(StaticLiveServerTestCase):
     def sleep(self, seconds=5):
         time.sleep(seconds)
