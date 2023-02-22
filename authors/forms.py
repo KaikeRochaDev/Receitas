@@ -36,7 +36,7 @@ class RegisterForm(forms.ModelForm):
             'O nome de usuário deve conter letras e números. '
             'o Usuário deve conter entre 4 e 150 caracteres.'
         ),
-        widget=forms.EmailInput(attrs={
+        widget=forms.TextInput(attrs={
             'placeholder': 'Digite seu nome de usuário...'
         }),
         label='Nome de usuário',
@@ -72,6 +72,16 @@ class RegisterForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'username', 'email', 'password']
+        
+    
+    def clean_email(self):
+        email = self.cleaned_data.get('email', '')
+        exists = User.objects.filter(email=email).exists()
+        
+        if exists:
+            raise ValidationError('Esse email já está sendo usado por outro usuário', code='invalid')
+        
+        return email
         
     def clean(self):
         cleaned_data = super().clean()
