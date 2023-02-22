@@ -1,11 +1,14 @@
-from utils.browser import make_chrome_browser
+import time
+from unittest.mock import patch
+
+import pytest
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-import time
-import pytest
+
 from recipes.tests.test_recipe_base import RecipeMixin
-from unittest.mock import patch
+from utils.browser import make_chrome_browser
+
 
 @pytest.mark.functional_test
 class RecipeHomePageFunctionalTest(StaticLiveServerTestCase, RecipeMixin):
@@ -36,3 +39,17 @@ class RecipeHomePageFunctionalTest(StaticLiveServerTestCase, RecipeMixin):
         search_input.send_keys(Keys.ENTER)
         
         self.assertIn(title_needed, browser.find_element(By.CLASS_NAME, 'main-content-list').text)
+        
+    @patch('recipes.views.PER_PAGE', new=2)
+    def test_recipe_home_page_pagination(self):
+        self.make_recipe_in_batch()
+        browser = make_chrome_browser()
+        browser.get(self.live_server_url)
+        
+        page2 = browser.find_element(By.XPATH, '//a[@aria-label="Ir para a página 2"]')
+        
+        page2.click()
+        
+        self.assertEqual(len(browser.find_elements(By.CLASS_NAME, 'recipe')), 2)
+        
+        self.sleep(1)
