@@ -6,7 +6,12 @@
     <div class="main-content center container">
         <h2>Login</h2>
         {% if request.user.is_authenticated %}
-            <p>Você está logado com {{request.user.username}}</p>
+            <div>Você está logado com {{request.user.username}}. Por favor, 
+                <form class="inline-form" method='POST' action="{% url 'authors:logout'%}">{% csrf_token %}
+                    <input type="hidden" name="username" value="{{request.user.username}}"> 
+                    <button class="plaintext-button" type="submit">clique aqui</button>
+                </form>para deslogar
+            </div>
         {% endif %}
     </div>
 
