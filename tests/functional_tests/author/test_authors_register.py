@@ -42,7 +42,6 @@ class AuthorsRegisterTest(AuthorsBaseTest):
             
             self.assertIn('Por favor, Preencha seu nome', form.text)
             
-            self.sleep()
         self.form_field_test_with_callback(callback)
         
     def test_empty_last_name_error_message(self):

@@ -51,5 +51,3 @@ class RecipeHomePageFunctionalTest(StaticLiveServerTestCase, RecipeMixin):
         page2.click()
         
         self.assertEqual(len(browser.find_elements(By.CLASS_NAME, 'recipe')), 2)
-        
-        self.sleep(1)
