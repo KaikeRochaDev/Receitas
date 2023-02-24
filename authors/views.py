@@ -119,7 +119,7 @@ def dashboard_recipe_new(request):
 
         recipe.save()
 
-        messages.success(request, 'Receita criada com sucesso!')
+        messages.success(request, 'Salvo com sucesso!')
         return redirect(
             reverse('authors:dashboard_recipe_edit', args=(recipe.id,))
         )
