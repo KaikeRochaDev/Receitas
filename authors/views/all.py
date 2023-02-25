@@ -1,14 +1,13 @@
 from django.shortcuts import render, redirect
-from .forms import RegisterForm, LoginForm
+from authors.forms import RegisterForm, LoginForm
 from django.http import Http404
 from django.contrib import messages
 from recipes.models import Recipe
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
-from .forms.recipe_form import AuthorRecipeForm
+from authors.forms.recipe_form import AuthorRecipeForm
 
-# Create your views here.
 def register_view(request):
     register_form_data = request.session.get('register_form_data', None)
     form = RegisterForm(register_form_data)
