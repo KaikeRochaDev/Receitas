@@ -6,8 +6,23 @@ from django.contrib import messages
 from recipes.models import Recipe
 from django.urls import reverse
 from authors.forms.recipe_form import AuthorRecipeForm
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
+@method_decorator(
+    login_required(login_url='authors:login', redirect_field_name='next'),
+    name='dispatch'
+)
 class DashboardRecipe(View):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def setup(self, *args, **kwargs):
+        return super().setup(*args, **kwargs)
+
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+    
     def get_recipe(self, id=None):
         recipe = None
         
@@ -22,7 +37,6 @@ class DashboardRecipe(View):
     
     def render_recipe(self, form):
         return render(self.request, 'authors/pages/dashboard_recipe.html', {'form': form})
-    
     
     def get(self, request, id=None):
         recipe = self.get_recipe(id)
