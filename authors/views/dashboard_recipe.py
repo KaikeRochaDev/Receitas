@@ -8,12 +8,29 @@ from django.urls import reverse
 from authors.forms.recipe_form import AuthorRecipeForm
 
 class DashboardRecipe(View):
-    def get(self, request, id):
-        self.request
-        recipe = Recipe.objects.filter(is_published=False, author=request.user, id=id).first()
+    def get_recipe(self, id):
+        recipe = None
+        
+        if id:
+            self.request
+            recipe = Recipe.objects.filter(is_published=False, author=self.request.user, id=id).first()
+        
+            if not recipe:
+                raise Http404()
+            
+        return recipe
     
-        if not recipe:
-            raise Http404()
+    def render_recipe(self, form):
+        return render(self.request, 'authors/pages/dashboard_recipe.html', {'form': form})
+    
+    
+    def get(self, id):
+        recipe = self.get_recipe(id)
+        form = AuthorRecipeForm(instance=recipe)
+        return self.render_recipe(form)
+    
+    def post(self, request, id):
+        recipe = self.get_recipe(id)
         
         form = AuthorRecipeForm(
             request.POST or None,
@@ -22,7 +39,6 @@ class DashboardRecipe(View):
         )
         
         if form.is_valid():
-            # Agora, o form é válido e eu posso tentar salvar
             recipe = form.save(commit=False)
 
             recipe.author = request.user
@@ -34,4 +50,4 @@ class DashboardRecipe(View):
             messages.success(request, 'Sua receita foi salva com sucesso!')
             return redirect(reverse('authors:dashboard_recipe_edit', args=(id,)))
         
-        return render(request, 'authors/pages/dashboard_recipe.html', {'form': form})
+        return self.render_recipe(form)
