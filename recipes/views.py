@@ -4,7 +4,7 @@ from django.shortcuts import get_list_or_404, get_object_or_404, render
 from utils.pagination import make_pagination
 import os
 from recipes.models import Recipe
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 PER_PAGE = int(os.environ.get('PER_PAGE', 6))
 
@@ -108,3 +108,19 @@ def recipe(request, id):
         'recipe': recipe,
         'is_detail_page': True,
     })
+    
+class RecipeDetail(DetailView):
+    model = Recipe
+    context_object_name = 'recipe'
+    template_name = 'recipes/pages/recipe-view.html'
+    
+    def get_context_data(self, *args,**kwargs):
+        ctx = super().get_context_data(*args, **kwargs)
+        
+        ctx.update({
+            'is_detail_page': True
+        })
+        
+        return ctx
+    
+    
